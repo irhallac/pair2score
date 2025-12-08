@@ -1,0 +1,79 @@
+pipeline:
+  experiment_id: exp01_example_grammar_small_baseline_seed42
+  trait: grammar
+  train_folds:
+  - B
+  - C
+  - D
+  - E
+  test_fold: A
+  val_ratio: 0.1
+  seed: 42
+determinism:
+  enabled: true
+  warn_only: false
+  allow_tf32: false
+hardware:
+  cuda_device: 0
+metadata:
+  experiment_id: exp01_example_grammar_small_baseline_seed42
+  notes: grammar small-cache baseline (Stage1 disabled)
+paths:
+  essays_csv: data/datasets/main/train_with_folds.csv
+  output_dir: outputs/exp01_example_grammar_small_baseline/grammar
+  checkpoint_dir: checkpoints/exp01_example_grammar_small_baseline/grammar
+  pair_cache_dir: data/pairs_small
+  embedding_dir: data/embeddings
+model:
+  base_model: /path/to/local/meta-llama-checkpoint
+  quantization: none
+stage1_relative:
+  enabled: false
+  pairs_file: data/pairs_small/run2_grammar.jsonl
+  pairs_meta: data/pairs_small/run2_grammar_meta.json
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+  training:
+    epochs: 10
+    batch_size: 4
+    lr: 0.0002
+    weight_decay: 0.01
+    log_every: 100
+    monitor: val_acc
+    monitor_mode: max
+    early_stop_patience: 3
+    early_stop_min_delta: 0.0005
+  outputs:
+    save_adapter: true
+    save_embeddings: true
+stage2_absolute:
+  mode: base
+  lora:
+    reuse_relative_adapter: false
+    new_adapter_rank: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+  training:
+    epochs: 15
+    batch_size: 4
+    lr: 0.0001
+    weight_decay: 0.01
+    log_every: 100
+    monitor: val_qwk
+    monitor_mode: max
+    early_stop_patience: 4
+    early_stop_min_delta: 0.0005
+  embedding_fusion:
+    enabled: false

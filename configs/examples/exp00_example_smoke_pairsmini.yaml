@@ -1,0 +1,72 @@
+pipeline:
+  experiment_id: exp00_example_smoke_pairsmini_seed7
+  trait: grammar
+  train_folds:
+  - B
+  test_fold: A
+  val_ratio: 0.05
+  seed: 7
+determinism:
+  enabled: true
+  warn_only: false
+  allow_tf32: false
+hardware:
+  cuda_device: 0
+metadata:
+  experiment_id: exp00_example_smoke_pairsmini_seed7
+  notes: smoke test using pairs_mini (Stage1+Stage2 run for one epoch)
+paths:
+  essays_csv: data/datasets/main/train_with_folds.csv
+  output_dir: outputs/exp00_example_smoke_pairsmini/grammar
+  checkpoint_dir: checkpoints/exp00_example_smoke_pairsmini/grammar
+  pair_cache_dir: data/pairs_mini
+  embedding_dir: data/embeddings
+model:
+  base_model: /path/to/local/meta-llama-checkpoint
+  quantization: none
+stage1_relative:
+  enabled: true
+  pairs_file: data/pairs_mini/run2_grammar.jsonl
+  pairs_meta: data/pairs_mini/run2_grammar_meta.json
+  lora:
+    r: 8
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - v_proj
+  training:
+    epochs: 1
+    batch_size: 2
+    lr: 0.0003
+    weight_decay: 0.01
+    log_every: 20
+    monitor: val_acc
+    monitor_mode: max
+    early_stop_patience: 1
+    early_stop_min_delta: 0.001
+  outputs:
+    save_adapter: true
+    save_embeddings: true
+stage2_absolute:
+  mode: base
+  lora:
+    reuse_relative_adapter: true
+    new_adapter_rank: 8
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - v_proj
+  training:
+    epochs: 1
+    batch_size: 2
+    lr: 0.0002
+    weight_decay: 0.01
+    log_every: 50
+    monitor: val_qwk
+    monitor_mode: max
+    early_stop_patience: 1
+    early_stop_min_delta: 0.001
+  embedding_fusion:
+    enabled: false
