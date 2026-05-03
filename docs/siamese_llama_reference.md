@@ -4,10 +4,10 @@ Authoritative description of the Stage 1 model implemented in src/pair2score/rel
 
 ## Concept
 - Backbone: LLaMA‑3.2‑1B LLM (base) with LoRA adapters (default r=16, alpha=32).
-- Topology: Siamese — inputs A and B share tokenizer, encoder, and adapters.
+- Topology: Siamese — inputs A and B share tokenizer, backbone, and adapters.
 - Utilities: linear head (bias=False) maps pooled embeddings to scalar utilities s(h).
 - Directional ranking: logits Δ = s(hₐ) − s(h_b), so Δ(a,b) = −Δ(b,a).
-- Loss: BCEWithLogitsLoss(Δ, y), where y=1 if A should rank higher than B.
+- Loss: BCEWithLogitsLoss(Δ, y), where y=1 for the first document in each canonically ordered pair.
 - Re-use: utilities s(h) seed Stage 2 (warm-start or embedding fusion).
 
 ## Pseudocode
@@ -31,7 +31,7 @@ loss = BCEWithLogitsLoss(Δ, label)
             └────────┬────────┘          └────────┬────────┘
                      │                            │
             ┌────────▼────────┐          ┌────────▼────────┐
-            │   LLaMA Encoder │◄────────►│   LLaMA Encoder │
+            │  LLaMA Backbone │◄────────►│  LLaMA Backbone │
             │ (shared weights)│          │ (shared weights)│
             └────────┬────────┘          └────────┬────────┘
                      ▼                            ▼

@@ -1,2 +1,4 @@
 data/datasets/main/train*.csv
-data/datasets/main/train*.csv
+outputs/
+checkpoints/
+data/embeddings/

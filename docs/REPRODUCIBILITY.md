@@ -8,16 +8,19 @@ Create the Conda environment and activate it:
 
 ```bash
 conda env create -f environment.yml
-conda activate pair2score_py310
+conda activate pair2score
 ```
 
-The env uses Python 3.10 with:
+This Conda recipe is the tested installation path for this public release. It uses Python 3.10 with:
 - PyTorch 2.4.0 (CUDA 12.1)
 - transformers 4.57.1
 - peft 0.15.0
-- scikit‑learn 1.7.2
-- tqdm 4.67.1
-- PyYAML 6.0.3
+- pandas 2.2.3
+- scikit‑learn 1.5.2
+- tqdm 4.66.5
+- PyYAML 6.0.2
+
+Internally, `environment.yml` installs the CUDA 12.1 PyTorch wheels from the official PyTorch wheel index via pip, matching the environment used for our smoke-tested runs.
 
 We ran on GPUs with ≥16 GB VRAM (A100 / RTX8000 / H100). Smaller cards may work with reduced batch sizes but are not tested.
 
@@ -25,7 +28,7 @@ We ran on GPUs with ≥16 GB VRAM (A100 / RTX8000 / H100). Smaller cards may w
 
 We do **not** ship any LLaMA weights. To run the code:
 
-1. Accept the LLaMA license and download the checkpoint you plan to use (for example, LLaMA‑3.2‑1B base or instruct) from Hugging Face.
+1. Accept the LLaMA license and download the checkpoint you plan to use from the official Hugging Face page, for example `https://huggingface.co/meta-llama/Llama-3.2-1B`.
 2. Store the model anywhere on your filesystem. The loader understands both layouts:
    - `.../config.json` and `.../tokenizer_config.json` at the root, or
    - `.../model/config.json` and `.../tokenizer/tokenizer_config.json`.
@@ -87,6 +90,7 @@ The directory above must exist locally before you launch any experiments; all of
    ```bash
    bash scripts/run_pipeline.sh configs/examples/exp00_example_smoke_pairsmini.yaml
    ```
+   This smoke config is the recommended first run after setting `model.base_model` and preparing `train_with_folds.csv`.
 
 ## 5. Outputs and verification
 
