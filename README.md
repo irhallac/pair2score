@@ -1,5 +1,10 @@
 # Pair2Score
 
+[![arXiv](https://img.shields.io/badge/arXiv-2605.02069-b31b1b.svg)](https://arxiv.org/abs/2605.02069)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+Code for the paper [**Pair2Score: Pairwise-to-Absolute Transfer for LLM-Based Essay Scoring**](https://arxiv.org/abs/2605.02069) (Hallaç & Oğul, 2026).
+
 Pair2Score is a two-stage framework that transfers pairwise ranking supervision into absolute scoring via parameter-efficient LLM adaptation. We evaluate on Automated Essay Scoring (AES) as an initial setting, but the formulation may generalize to other rubric-aligned or ordinal scoring tasks where comparative supervision can be derived from absolute labels.
 
 - **Stage 1 – Relative ranking** (`src/pair2score/relative.py`): A directional Siamese LLaMA with shared LoRA adapters learns pairwise comparisons from document pairs derived from absolute trait labels, enforcing Δ(a,b) = −Δ(b,a).
@@ -91,4 +96,15 @@ Each run produces:
 
 ## Citation
 
-Citation details will be added upon publication.
+If you use this code or build on this work, please cite:
+
+```bibtex
+@article{hallac2026pair2score,
+  title   = {Pair2Score: Pairwise-to-Absolute Transfer for {LLM}-Based Essay Scoring},
+  author  = {Halla\c{c}, \.{I}brahim R{\i}za and O\u{g}ul, Hasan},
+  journal = {arXiv preprint arXiv:2605.02069},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2605.02069},
+  doi     = {10.48550/arXiv.2605.02069}
+}
+```
