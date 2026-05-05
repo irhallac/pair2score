@@ -101,7 +101,7 @@ If you use this code or build on this work, please cite:
 ```bibtex
 @article{hallac2026pair2score,
   title   = {Pair2Score: Pairwise-to-Absolute Transfer for {LLM}-Based Essay Scoring},
-  author  = {Halla\c{c}, \.{I}brahim R{\i}za and O\u{g}ul, Hasan},
+  author  = {Hallaç, İbrahim Rıza and Oğul, Hasan},
   journal = {arXiv preprint arXiv:2605.02069},
   year    = {2026},
   url     = {https://arxiv.org/abs/2605.02069},
